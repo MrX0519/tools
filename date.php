@@ -18,3 +18,20 @@ function printDates($start, $end)
     }
     return $data;
 }
+
+
+
+/**
+ * @description:根据时间(如：2021-05-12)获取月头月尾
+ * @param $time (如：2021-05-12)
+ * @return array ['月头','月尾']
+ */
+function getMonthBetween($time)
+{
+    $time = explode('-', $time);
+    $year = $time[0];
+    $month = $time[1];
+    $beginDate = date('Y-m-01', strtotime("$year-$month"));
+    $endDate = date('Y-m-d', strtotime("$beginDate +1 month -1 day"));
+    return [$beginDate,$endDate];
+}

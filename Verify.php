@@ -3,6 +3,7 @@
 namespace app\http\middleware;
 
 use app\common\Parser;
+use Firebase\JWT\JWT;
 use think\exception\HttpResponseException;
 
 /**
@@ -67,8 +68,12 @@ class Verify
                 }
                 $result[] = $value;
             }, $verify[$path][0]['param']);
+
             $validate = new \think\Validate;
             $rule = array_column($result, 'require', 'name'); #构建tp的validate的自定义规则需要的数组格式
+            if (in_array('token', array_values($verify[$path][0]['header'][0]))) {
+                array_unshift($rule, ['token'=>'require']);
+            }
             $validate->rule($rule);
             if (!$validate->check($param)) {
                 throw new HttpResponseException(json(['code'=>0,'msg'=>$validate->getError(),'data'=>[]]));
